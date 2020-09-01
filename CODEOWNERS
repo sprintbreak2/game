@@ -1,0 +1,10 @@
+-### CODE OWNERS ###
+-### Archivo donde indicamos Head y Sponsor para las auotizaciones. ###
+-### Se deben indicar los usuarios de Gitlab. ###
+-### Si es mas de uno se deben se separan por espacio. ###
+-
+-#Ejemplo:
+-
+-#* @userejemplo1 @userejemplo2 @userejemplo3
+-
+-# Descomentar la linea de los usuarios.

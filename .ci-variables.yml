@@ -1,0 +1,39 @@
+#### USO DE .CI-VARIABLES Y TEMPLATES ####
+
+# Para que el uso de los templates funcione correctamente, es requerido que las variables definidas en este archivo cotnengan un valor. 
+# No se podrán modificar el nombre de las variables.
+# Solo se puede modificar el valor de la derecha, en caso de no modificar se tomara el valor que esta por defecto en este archivo.
+ 
+variables:
+#### Versión de NPM a utilizar. Puede ser 8, 10, o 12 ####
+  NPM_VERSION: "12"
+
+#### Artifact Path, adonde se guarda el compilado ####
+  ARTIFACT_PATH: "build"
+
+#### Tests ####
+  IS_LINT_ENABLED: "false"
+  IS_E2E_ENABLED: "false"
+
+#### Para buildear en producción ("true"), o promover la imagen de staging ("false", y el valor recomendado).
+# Sólamente habilitarlo si es un frontend el cual usa variables de entorno, por lo que requiere que se buildee 
+# nuevamente en producción (dado que las variables se definen en tiempo de compilación y no se pueden utilizar configmaps).
+  FRONTEND: "true"
+
+#### OKD ####
+# Para crear variables de entorno específicas por ambiente, se puede crear un template en la misma carpeta base de OKD (OKD_TEMPLATES_BASE_PATH), que 
+# se ejecutará previo al template de deploy. En él, recomendamos instanciar todas las variables de entorno que sean dinámicas 
+# usando un ConfigMap (las variables estáticas, en cambio, deberían ir en el archivo OKD_DEPLOY_TEMPLATE_PARAMS). El nombre del ConfigMap en 
+# el template debe ser igual para los tres ambientes, y los templates deben estar en los archivos 'development.yml', 'staging.yml' y 'production.yml'.
+# Se proveen archivos de ejemplo en este template.
+  OKD_PROJECT: ""
+  OKD_USERS: "A00000 A11111"
+  OKD_TEMPLATES_BASE_PATH: "okd"
+  OKD_DEPLOY_TEMPLATE_NAME: "${OKD_TEMPLATES_BASE_PATH}/deploy-image.yml"
+  OKD_DEPLOY_TEMPLATE_PARAMS: "${OKD_TEMPLATES_BASE_PATH}/deploy-params.env"
+  CMDB: ""       # -> Agregar codigo CMDB. El valor depende de cada proyecto, debería ser un código de 6 letras como máximo
+
+### Las variables especificadas abajo están deprecadas, y se recomienda usar las de arriba por sobre ellas. Si bien no deberían generar problemas, no se garantiza su funcionamiento.
+#  OKD_CONFIGMAP_PATH: "okd"  # REEMPLAZADO POR ${OKD_TEMPLATES_BASE_PATH}
+#  OKD_TEMPLATE_NAME: "${OKD_TEMPLATES_BASE_PATH}/deploy-image.yml"  # REEMPLAZADO POR ${OKD_DEPLOY_TEMPLATE_NAME}
+#  OKD_TEMPLATE_PARAMS: "${OKD_TEMPLATES_BASE_PATH}/deploy-params.env"  # REEMPLAZADO POR ${OKD_DEPLOY_TEMPLATE_PARAMS}

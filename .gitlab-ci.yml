@@ -1,0 +1,7 @@
+include:
+  # Npm pipeline
+  - project: 'santander-tecnologia/global-ci-templates'
+    file: 'npm/.gitlab-ci.yml'
+    ref: 'master'
+  # User variables
+  - local: '.ci-variables.yml'
