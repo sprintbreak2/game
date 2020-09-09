@@ -18,6 +18,9 @@ import '@santander/everest-ui/src/icons.css'
 
 import 'assets/stylesheets/main.scss'
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
+
 import Spinner from 'app/shared/components/loader/SpinnerContainer'
 
 // Own toast
