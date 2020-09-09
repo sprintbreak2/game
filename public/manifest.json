@@ -1,9 +1,13 @@
 {
-  "main.css": "/css/main.7c0d23ff3dc135f3cf9e.css",
-  "main.js": "/main.7c0d23ff3dc135f3cf9e.bundle.js",
+  "main.css": "/css/main.576e2c37d94a2e7c3f09.css",
+  "main.js": "/main.576e2c37d94a2e7c3f09.bundle.js",
   "favicon.ico": "/favicon.ico",
   "fonts/fonts.css": "/fonts/SantanderText-Regular.woff",
   "fonts/icons.css": "/fonts/SantanderWebFont.woff2",
+  "fonts/font-awesome.min.css": "/fonts/fontawesome-webfont.woff2",
   "images/icons.css": "/images/SantanderWebFont.svg",
+  "images/font-awesome.min.css": "/images/fontawesome-webfont.svg",
+  "images/juego_crop.png": "/images/juego_crop.png",
+  "images/logo.png": "/images/logo.png",
   "index.html": "/index.html"
 }
