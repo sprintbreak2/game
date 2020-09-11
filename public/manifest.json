@@ -1,13 +1,13 @@
 {
-  "main.css": "/css/main.3b36b4a77a423b59aefc.css",
-  "main.js": "/main.3b36b4a77a423b59aefc.bundle.js",
-  "favicon.png": "/favicon.png",
-  "fonts/fonts.css": "/fonts/SantanderText-Regular.woff",
-  "fonts/icons.css": "/fonts/SantanderWebFont.woff2",
-  "fonts/font-awesome.min.css": "/fonts/fontawesome-webfont.woff2",
-  "images/icons.css": "/images/SantanderWebFont.svg",
-  "images/font-awesome.min.css": "/images/fontawesome-webfont.svg",
-  "images/juego_crop.png": "/images/juego_crop.png",
-  "images/logo.png": "/images/logo.png",
-  "index.html": "/index.html"
+  "main.css": "./css/main.7949301e3c7be228967d.css",
+  "main.js": "./main.7949301e3c7be228967d.bundle.js",
+  "favicon.png": "./favicon.png",
+  "fonts/fonts.css": "./fonts/SantanderText-Regular.woff",
+  "fonts/icons.css": "./fonts/SantanderWebFont.woff2",
+  "fonts/font-awesome.min.css": "./fonts/fontawesome-webfont.woff2",
+  "images/icons.css": "./images/SantanderWebFont.svg",
+  "images/font-awesome.min.css": "./images/fontawesome-webfont.svg",
+  "images/juego_crop.png": "./images/juego_crop.png",
+  "images/logo.png": "./images/logo.png",
+  "index.html": "./index.html"
 }
