@@ -20,6 +20,7 @@ const AppRoute = (routeProps) => {
     )
 
     // Here goes the authentication
+    //protected ? : return page;
 
     return page
 }

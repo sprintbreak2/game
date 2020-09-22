@@ -1,0 +1,73 @@
+@font-face {
+    font-family: "SantanderText-Bold";
+    src: url('./../fonts/SantanderText-Bold.woff') format('woff');
+  }
+  @font-face {
+    font-family: "SantanderText-Light";
+    src: url('./../fonts/SantanderText-Light.otf') format('opentype');
+  }
+  @font-face {
+    font-family: "SantanderText-Regular";
+    src: url('./../fonts/SantanderText-Bold.woff') format('woff');
+  }
+  
+  @font-face {
+    font-family: "SantanderHeadline-Regular";
+    src: url('./../fonts/SantanderHeadline-Regular.ttf') format('truetype');
+    src: url('./../fonts/SantanderHeadline-Regular.woff') format('woff');
+  }
+  
+  @font-face {
+    font-family: "SantanderHeadline-It";
+    src: url('./../fonts/SantanderHeadline-It.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: "SantanderHeadline-Bold";
+    src: url('./../fonts/SantanderHeadline-Bold.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: "SantanderHeadline-BoldIt";
+    src: url('./../fonts/SantanderHeadline-BoldIt.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: "SantanderMicroText";
+    src: url('./../fonts/SantanderMicroText.otf') format('opentype');
+  }
+  
+  @font-face {
+    font-family: "SantanderMicroText-It";
+    src: url('./../fonts/SantanderMicroTextIt.otf') format('opentype');
+  }
+  
+  @font-face {
+    font-family: "SantanderMicroText-Bd";
+    src: url('./../fonts/SantanderMicroTextBd.otf') format('opentype');
+  }
+  
+  @font-face {
+    font-family: "SantanderMicroText-BdIt";
+    src: url('./../fonts/SantanderMicroTextBdIt.otf') format('opentype');
+  }
+  
+  @font-face {
+    font-family: "SantanderMicroText-Lt";
+    src: url('./../fonts/SantanderMicroTextLt.otf') format('opentype');
+  }
+  
+  @font-face {
+    font-family: "SantanderMicroText-LtIt";
+    src: url('./../fonts/SantanderMicroTextLtIt.otf') format('opentype');
+  }
+  
+  @font-face {
+    font-family: "SantanderWebFont";
+    src: url('./../fonts/SantanderWebFont.eot');
+      src: url('./../fonts/SantanderWebFont.eot?#iefix') format('embedded-opentype'),
+          url('./../fonts/SantanderWebFont.svg#SantanderWebFont') format('svg'),
+          url('./../fonts/SantanderWebFont.woff') format('woff'),
+          url('./../fonts/SantanderWebFont.woff2') format('woff2');
+  }
+  

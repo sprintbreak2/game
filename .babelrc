@@ -1,20 +1,20 @@
 {
-    "presets": ["@babel/preset-env", "@babel/preset-react"],
-    "plugins": [
-      "@babel/plugin-proposal-object-rest-spread",
-      "syntax-class-properties",
-      "transform-class-properties",
-      "emotion",
-      ["@babel/plugin-transform-runtime",
-        {
-          "regenerator": true
-        }
-      ],
-      [
-        "module-resolver",
-        {
-          "root": ["./src"]
-        }
-      ]  
-    ]
-  }
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "syntax-class-properties",
+    "transform-class-properties",
+    "emotion",
+    ["@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": ["./src"]
+      }
+    ]  
+  ]
+}

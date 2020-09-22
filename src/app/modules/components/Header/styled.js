@@ -14,8 +14,16 @@ export const Container = styled.div`
         .container {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             padding: 1rem;
+
+            .navbar-brand-username {
+                width: 80%;
+            }
+
+            .username p {
+                font-weight: 400;
+            }
         }
     }
 }

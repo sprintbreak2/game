@@ -24,7 +24,6 @@ export const StyledModal = styled.div`
     max-height: 100%;
     min-width: 240px;
     max-width: 50%;
-    padding: 20px;
     position: relative;
     overflow: auto;
     transition: all .4s cubic-bezier(.25,.8,.25,1);
@@ -41,6 +40,10 @@ export const StyledModalContent = styled.div`
     text-align: center;
     order: 1;
     flex-direction: column;
+
+    h4 {
+        padding-top: 1rem;
+    }
 
     .MuiTextField-root {
         width: 90%;
@@ -65,7 +68,7 @@ export const StyledModalActions = styled.div`
     button {
         max-width: 120px;
         flex: 1;
-        margin: 1rem;
+        margin: 0.5rem;
     }
 `;
 

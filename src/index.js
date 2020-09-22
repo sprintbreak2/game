@@ -11,7 +11,7 @@ import AppRoute from 'app/AppRoute'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 
 import theme from '@santander/everest-ui/lib/theme'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
 
 import '@santander/everest-ui/src/fonts.css'
 import '@santander/everest-ui/src/icons.css'
@@ -46,22 +46,37 @@ BodyComponent.propTypes = {
 
 const Body = withRouter(BodyComponent)
 
-const estiloColor = {
-    height: '100%',
-    margin: '0 auto'
-}
+const GlobalStyle = createGlobalStyle`
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'SantanderMicroText';
+        font-size: 16px;
+    }
+
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        transition: all 0.3s ease;
+    }
+
+    textarea:focus, button:focus, input:focus, img:focus {
+        outline: none;
+    }
+`;
 
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate persistor={persistor}>
             <BrowserRouter>
                 <ThemeProvider theme={theme}>
-                    <div style={estiloColor}>
+                        <GlobalStyle />
                         <Spinner />
                         <App>
                             <Body key='body' />
                         </App>
-                    </div>
                 </ThemeProvider>
             </BrowserRouter>
         </PersistGate>

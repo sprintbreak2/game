@@ -4,8 +4,6 @@ const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
 const ManifestPlugin = require('webpack-manifest-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-    .BundleAnalyzerPlugin
 
 module.exports = ({ ENV_FILE }, argv) => ({
     entry: path.join(__dirname, './src/index.js'),
@@ -109,15 +107,11 @@ module.exports = ({ ENV_FILE }, argv) => ({
         }),
         new HtmlWebPackPlugin({
             template: './public/index.html',
-            favicon: './public/favicon.ico'
+            favicon: './public/favicon.png'
         }),
         new MiniCssExtractPlugin({
             filename: 'css/[name].[hash].css',
             chunkFilename: 'css/[id].[hash].css'
-        }),
-        new BundleAnalyzerPlugin({
-            analyzerMode: 'disabled',
-            generateStatsFile: true
         })
     ]
 })

@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@santander/everest-ui';
+import { makeStyles } from "@material-ui/core/styles";
+import { LoginsContainer } from './styled';
+import { GoogleLogin } from 'react-google-login';
+import { useHistory } from "react-router-dom";
+import { connect } from 'react-redux';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { useForm, Controller } from 'react-hook-form';
 import logo from './../../../../../assets/img/logo.png';
+import { loginRequest } from "app/modules/store/actions/actions";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -32,10 +37,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignIn() {
+const Login = ({ loginRequest }) => {
+  
   const classes = useStyles();
+  const history = useHistory();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const { register, handleSubmit, control } = useForm();
+
+  const handleLogin = () => {
+    loginRequest({ email, password });
+    history.push('/');
+  }
+
+  const handleGoogleResponse = (response) => {
+    console.log(response);
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -43,31 +62,48 @@ export default function SignIn() {
       <div className={classes.paper}>
         <img src={logo} alt="Sprint Break" />
         <form className={classes.form} noValidate
-        onSubmit={handleSubmit((data)=>alert(JSON.stringify(data)))}
+        onSubmit={handleSubmit(handleLogin)}
         >
+          <LoginsContainer>
+
+            {/* Google login */}
+            <GoogleLogin 
+              buttonText="Entrar con Google" 
+              clientId="745067876751-jb04lf20eopl38g1jrk2mqhqb881eidj.apps.googleusercontent.com"
+              onSuccess={handleGoogleResponse} 
+              onFailure={handleGoogleResponse} 
+              cookiePolicy={'single_host_origin'}
+            />
+            {/* GitHub login */}
+            {/* Twitter login */}
+            {/* Linkedin login */}
+
+          </LoginsContainer>
           <TextField
-            variant="outlined"
-            margin="normal"
             inputRef={register} 
-            required
-            fullWidth
+            onChange={e => setEmail(e.target.value)}
             id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
+            margin="normal"
+            variant="outlined"
+            fullWidth
             autoFocus
+            required
           />
           <TextField
-            variant="outlined"
-            margin="normal"
+            onChange={e => setPassword(e.target.value)}
             inputRef={register}
-            required
-            fullWidth
             name="password"
             label="Password"
             type="password"
             id="password"
             autoComplete="current-password"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
           />
           <FormControlLabel
             control={
@@ -93,9 +129,17 @@ export default function SignIn() {
                 {"No tenés cuenta? Registrate"}
               </Link>
             </Grid>
-          </Grid>
+          </Grid>          
         </form>
       </div>
     </Container>
   );
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+      loginRequest: data => dispatch(loginRequest(data)),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Login);
