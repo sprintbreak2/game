@@ -1,138 +1,112 @@
-import React, { useState } from "react";
-import { useForm, Controller } from 'react-hook-form';
-import { Button } from '@santander/everest-ui';
-import { makeStyles } from "@material-ui/core/styles";
-import { LoginsContainer } from './styled';
-import { GoogleLogin } from 'react-google-login';
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { connect } from 'react-redux';
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
+import { useForm, Controller } from 'react-hook-form';
+// import { GoogleLogin } from 'react-google-login';
+// import GitHubLogin from 'react-github-login';
+import { GoogleLoginButton, GithubLoginButton, LinkedInLoginButton } from 'react-social-login-buttons';
+import { TextField } from '@material-ui/core';
+import Button from './../../../components/Button/Button';
+import { Container, LoginsContainer } from './styled';
 import logo from './../../../../../assets/img/logo.png';
 import { loginRequest } from "app/modules/store/actions/actions";
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: "1rem auto",
-    width: "100%",
-  }
-}));
+// import GoogleButton from './../../../components/GoogleButton/GoogleButton';
 
 const Login = ({ loginRequest }) => {
-  
-  const classes = useStyles();
+
   const history = useHistory();
 
+  const [loginLocal, setLoginLocal] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { register, handleSubmit, control } = useForm();
 
+  const handleClickButton = () => {
+    handleLogin();
+    // console.log('click');
+    // let form = document.getElementById("form");
+    // form.submit();
+  }
+
   const handleLogin = () => {
-    loginRequest({ email, password });
+    // loginRequest({ email, password });
     history.push('/');
   }
 
-  const handleGoogleResponse = (response) => {
-    console.log(response);
+  const handleResponseLogin = (response) => {
+    console.log(JSON.stringify(response));
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <img src={logo} alt="Sprint Break" />
-        <form className={classes.form} noValidate
-        onSubmit={handleSubmit(handleLogin)}
-        >
-          <LoginsContainer>
+      <Container>
+        <div className="wrapper">
+          <div className="logo">
+            <img src={logo} alt="Sprint Break" />
+          </div>
+          { !loginLocal ? (<LoginsContainer>
 
-            {/* Google login */}
-            <GoogleLogin 
-              buttonText="Entrar con Google" 
+            <h4>Elegí cómo ingresar:</h4>
+
+            <GoogleLoginButton />
+            <GithubLoginButton />
+            <LinkedInLoginButton />
+
+
+            {/* <GoogleButton
+              text="Entrar con Google" 
+              onSuccessAction={handleResponseLogin} 
+              onFailureAction={handleResponseLogin} 
+            /> */}
+            {/* <GoogleLogin
               clientId="745067876751-jb04lf20eopl38g1jrk2mqhqb881eidj.apps.googleusercontent.com"
-              onSuccess={handleGoogleResponse} 
-              onFailure={handleGoogleResponse} 
+              onSuccess={handleResponseLogin} 
+              onFailure={handleResponseLogin} 
               cookiePolicy={'single_host_origin'}
+              render={ renderProps => (
+                <GoogleLoginButton onClick={renderProps.onClick} />
+              )}
             />
-            {/* GitHub login */}
-            {/* Twitter login */}
-            {/* Linkedin login */}
+            <GitHubLogin 
+              clientId="308eda919031d2d7a7f7"
+              onSuccess={handleResponseLogin}
+              onFailure={handleResponseLogin}
+              render={renderProps => (
+                <GithubLoginButton onClick={renderProps.onClick} />
+              )}
+            />
+            <LinkedInLoginButton /> */}
 
-          </LoginsContainer>
-          <TextField
-            inputRef={register} 
-            onChange={e => setEmail(e.target.value)}
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            margin="normal"
-            variant="outlined"
-            fullWidth
-            autoFocus
-            required
-          />
-          <TextField
-            onChange={e => setPassword(e.target.value)}
-            inputRef={register}
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-          />
-          <FormControlLabel
-            control={
-            <Controller as={Checkbox} control={control} name="remember" color="primary" defaultValue={false} />}
-            label="Recordar"
-          />
-          <Button
-            text="Ingresar"
-            type="submit"
-            size="large"
-            variant="primary"
-            className={classes.submit}
-            fullWidth
-            />
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Olvidaste la contraseña?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"No tenés cuenta? Registrate"}
-              </Link>
-            </Grid>
-          </Grid>          
-        </form>
-      </div>
-    </Container>
+          </LoginsContainer>) : null }
+
+          { !loginLocal ?
+            (<Button className="new-user" onClick={()=>setLoginLocal(true)}>Ingresar usuario</Button>) : null }
+
+          { loginLocal ? 
+            (<form id="form" noValidate onSubmit={handleSubmit(handleLogin)}>
+              <h4>Ingresá tus datos de acceso:</h4>
+              <div className="input-group">              
+                <TextField
+                  inputRef={register} 
+                  onChange={e => setEmail(e.target.value)}
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+                <TextField
+                  onChange={e => setPassword(e.target.value)}
+                  inputRef={register}
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                />
+                <Button className="button" onClick={handleClickButton}>Entrar</Button>
+                </div>
+            </form>) : null }
+        </div>
+      </Container>
   );
 }
 

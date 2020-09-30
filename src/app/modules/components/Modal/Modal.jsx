@@ -6,24 +6,26 @@ import {
     StyledModalContent,
     StyledModalOverlay  
 } from './styled';
-import { Button, TextField } from '@santander/everest-ui';
+import Button from './../Button/Button';
+import { TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setUsername } from './../../../modules/store/actions/actions';
+import { setUsername, loginSuccess } from './../../../modules/store/actions/actions';
 
 
-const Modal = ({ active, onCancel, newUsername }) => {
+const Modal = ({ active, onCancel, newUsername, loginOn }) => {
 
     const [value, setValue] = useState(null);
     const history = useHistory();
 
-    const handleOnChange = value => {
-        setValue(value);
+    const handleOnChange = e => {
+        setValue(e.target.value);
     }
 
     const handleSuccess = () => {
         newUsername(value);
-        history.push("/start");
+        loginOn();
+        history.push("/room");
     }
 
     return (active &&
@@ -35,8 +37,8 @@ const Modal = ({ active, onCancel, newUsername }) => {
                     <TextField name="username" label="Username" onChange={handleOnChange} />
                 </StyledModalContent>
                 <StyledModalActions>
-                    <Button text="Cancelar" variant="secondary" size="medium" onClick={onCancel} />
-                    <Button text="Confirmar" type="primary" size="medium" onClick={handleSuccess} />
+                    <Button className="button" onClick={onCancel}>Cancelar</Button>
+                    <Button className="button" onClick={handleSuccess}>Confirmar</Button>
                 </StyledModalActions>
             </StyledModal>
         </StyledModalContainer>
@@ -46,6 +48,7 @@ const Modal = ({ active, onCancel, newUsername }) => {
 const mapDispatchToProps = dispatch => {
     return {
         newUsername: username => dispatch(setUsername(username)),
+        loginOn: () => dispatch(loginSuccess()),
     }
 }
 

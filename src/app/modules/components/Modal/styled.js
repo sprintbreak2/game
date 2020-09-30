@@ -29,14 +29,14 @@ export const StyledModal = styled.div`
     transition: all .4s cubic-bezier(.25,.8,.25,1);
     width: 100%;
     z-index: 103;
+    border: 3px solid rgb(236,0,0);
 `;
 
 export const StyledModalContent = styled.div`
     margin-bottom: 0;
     margin-top: 10px;
-    font-family: "SantanderText-Regular";
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 700;
     text-align: center;
     order: 1;
     flex-direction: column;
@@ -65,11 +65,10 @@ export const StyledModalActions = styled.div`
     padding-top: 20px;
     padding-bottom: 20px;
 
-    button {
-        max-width: 120px;
-        flex: 1;
+    & div.button {
         margin: 0.5rem;
     }
+
 `;
 
 export const StyledModalOverlay = styled.div`

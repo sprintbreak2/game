@@ -1,47 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
 import App from 'app/App'
-import * as serviceWorker from 'serviceWorker'
 import { persistor, store } from 'app/Store'
 import { Provider } from 'react-redux'
-import { Switch, BrowserRouter, withRouter } from 'react-router-dom'
+import { Switch, BrowserRouter, HashRouter, withRouter } from 'react-router-dom'
 import ApplicationRoutes from 'app/Routes'
 import AppRoute from 'app/AppRoute'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 
-import theme from '@santander/everest-ui/lib/theme'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
-
-import '@santander/everest-ui/src/fonts.css'
-import '@santander/everest-ui/src/icons.css'
 
 import 'assets/stylesheets/main.scss'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
-import Spinner from 'app/shared/components/loader/SpinnerContainer'
-
 // Own toast
 // import { ToastContainer} from 'react-toastify';
 
 import 'app/config/AxiosConfig'
 
-const { Routes } = ApplicationRoutes
+const { Routes } = ApplicationRoutes;
 
-const BodyComponent = ({ location: { pathname } }) => (
-    <Switch>
-        {Routes.map((route) => (
-            <AppRoute key={route.key} {...route} />
-        ))}
-    </Switch>
-)
+const BodyComponent = ({ location: { pathname } }) => {
+    const [extraPropsHeader, setExtraPropsHeader] = useState({ counter: null });
 
-BodyComponent.propTypes = {
-    location: PropTypes.shape({
-        pathname: PropTypes.string
-    })
+    return (
+        <Switch>
+            {Routes.map((route, key) =>
+                <AppRoute {...route} extraPropsHeader={setExtraPropsHeader} key={key} routes={Routes}
+                />
+            )}
+        </Switch>
+    )
 }
 
 const Body = withRouter(BodyComponent)
@@ -51,15 +42,18 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'SantanderMicroText';
         font-size: 16px;
     }
 
     body {
-        height: 100%;
+        background-image: radial-gradient(circle at top, #DEDEDE 20%, #FFFFFF 100%);
+        color: white;
+        height: 100vh;
         margin: 0;
         padding: 0;
         transition: all 0.3s ease;
+        box-sizing: border-box;
+        font-family: 'Barlow Semi Condensed', sans-serif;
     }
 
     textarea:focus, button:focus, input:focus, img:focus {
@@ -70,18 +64,11 @@ const GlobalStyle = createGlobalStyle`
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate persistor={persistor}>
-            <BrowserRouter>
-                <ThemeProvider theme={theme}>
-                        <GlobalStyle />
-                        <Spinner />
-                        <App>
-                            <Body key='body' />
-                        </App>
-                </ThemeProvider>
-            </BrowserRouter>
+            <HashRouter basename="/">
+                <GlobalStyle />
+                <App>
+                    <Body key='body' />
+                </App>
+            </HashRouter>
         </PersistGate>
-    </Provider>,
-    document.getElementById('root')
-)
-
-serviceWorker.unregister()
+    </Provider>, document.getElementById('root'));

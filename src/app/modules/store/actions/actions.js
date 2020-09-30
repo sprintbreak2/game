@@ -11,3 +11,15 @@ export const loginRequest = data => {
         payload: { data },
     }
 }
+
+export const loginSuccess = () => {
+    return {
+        type: 'LOGIN_SUCCESS'
+    }
+}
+
+export const loginFailure = () => {
+    return {
+        type: 'LOGIN_FAILURE'
+    }
+}

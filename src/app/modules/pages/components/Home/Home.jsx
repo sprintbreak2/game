@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BtnHome, PageHome, ImgHome } from './styled';
-import { Button } from '@santander/everest-ui';
+// import { Button } from '@material-ui/core';
+import Button from './../../../components/Button/Button';
 import { connect } from 'react-redux';
 import Header from './../../../components/Header/Header';
 import Modal from './../../../components/Modal/Modal';
@@ -19,7 +20,7 @@ const Home = ({ user }) => {
                     <img src={imgHome} alt="cartas-home" width="600" />
                 </ImgHome>
                 <BtnHome>
-                    <Button text="Entrar al juego" size="large" variant="primary" onClick={()=>setModal(true)} />
+                    <Button className="main_btn" variant="outlined" onClick={()=>setModal(true)}>Entrar al juego</Button>
                 </BtnHome>
             </PageHome>
         </React.Fragment>
@@ -28,7 +29,7 @@ const Home = ({ user }) => {
 
 const mapStateToProps = state => {
     return {
-        user: state.appReducer.userData,
+        user: state.loginReducer.userData,
     }
 }
 

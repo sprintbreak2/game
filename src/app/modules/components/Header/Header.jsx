@@ -1,14 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Container } from './styled';
-import { Button } from '@santander/everest-ui';
+import Button from './../Button/Button';
 import logo from './../../../../assets/img/logo.png';
+import { loginFailure } from './../../../modules/store/actions/actions';
+import { useHistory } from 'react-router-dom';
 
-const Header = ({ username, isLogged }) => {
+const Header = ({ username, isLogged, loginOff }) => {
 
-    React.useEffect(()=>{
-        console.log(username);
-    }, []);
+    const history = useHistory();
+
+    const handleSignOutClick = () => {
+        loginOff();
+        history.push("/login");
+    }
 
     return (
         <Container>
@@ -20,13 +25,13 @@ const Header = ({ username, isLogged }) => {
                                 <img src={logo} alt="Sprint Break" />
                             </a>
 
-                            { isLogged && username && <div className="username">
-                                <p>usuario: {username}</p>
-                            </div> }
+                            { isLogged && username ? (<div className="username">
+                                <p>Usuario: {username}</p>
+                            </div>) : null }
 
-                            { isLogged ? <div className="btn-salir">
-                                <Button text="Abandonar" onClick={()=>{}} />
-                            </div> : null }
+                            { isLogged ? (<div className="btn-salir">
+                                <Button onClick={handleSignOutClick}>Abandonar</Button>
+                            </div>) : null }
 
                         </div>
                     </nav>
@@ -38,9 +43,15 @@ const Header = ({ username, isLogged }) => {
 
 const mapStateToProps = state => {
     return {
-        username: state.appReducer.username,
-        isLogged: state.appReducer.isLogged
+        username: state.loginReducer.username,
+        isLogged: state.loginReducer.isLogged
     }
 }
 
-export default connect(mapStateToProps, null)(Header);
+const mapDispatchToProps = dispatch => {
+    return {
+        loginOff: () => dispatch(loginFailure()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

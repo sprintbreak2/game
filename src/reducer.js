@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import loader from './app/shared/components/loader/redux/Reducer';
-import { appReducer } from './app/modules/store/reducers/appReducer';
+import { loginReducer } from './app/modules/store/reducers/loginReducer';
+import rootReducer from './app/modules/store/reducers/rootReducer';
 
 export default combineReducers({
-    loader,
-    appReducer
+    rootReducer,
+    loginReducer
 })
