@@ -1,11 +1,8 @@
 {
-  "main.css": "./css/main.828c89fd94ffdfc98fdc.css",
-  "main.js": "./main.828c89fd94ffdfc98fdc.bundle.js",
+  "main.css": "./css/main.62aae0feb8e5a351dcf2.css",
+  "main.js": "./main.62aae0feb8e5a351dcf2.bundle.js",
   "favicon.png": "./favicon.png",
-  "fonts/main.scss": "./fonts/SantanderWebFont.woff2",
-  "fonts/fonts.css": "./fonts/SantanderText-Regular.woff",
   "fonts/font-awesome.min.css": "./fonts/fontawesome-webfont.woff2",
-  "images/main.scss": "./images/SantanderWebFont.svg",
   "images/elsa-white.svg": "./images/elsa-white.svg",
   "images/elsa.svg": "./images/elsa.svg",
   "images/font-awesome.min.css": "./images/fontawesome-webfont.svg",
