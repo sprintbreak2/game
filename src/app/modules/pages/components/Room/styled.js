@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+export const PageContainer = styled.div`
+    min-height: 100vh;
+    box-sizing: border-box;
+`;
+
 export const Container = styled.div`
     display: flex;
     flex-direction: column;

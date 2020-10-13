@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 
+export const PageContainer = styled.div`
+    height: 100%;
+    box-sizing: border-box;
+`;
+
 export const PageHome = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 `;
 
 export const ImgHome = styled.div`

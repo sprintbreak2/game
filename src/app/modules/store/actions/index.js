@@ -1,5 +1,0 @@
-export const login = require('./login')
-export const player = require('./player')
-export const room = require('./room')
-export const round = require('./round')
-export const wsDispatcher = require('./wsDispatcher')

@@ -3,35 +3,53 @@ import { connect } from 'react-redux';
 import { Container } from './styled';
 import Button from './../Button/Button';
 import logo from './../../../../assets/img/logo.png';
-import { loginFailure } from './../../../modules/store/actions/actions';
+import { room } from './../../../modules/store/actions/index';
+import { logout } from './../../../modules/store/actions/loginActions';
+import { status } from './../../../modules/store/actions/roomActions';
 import { useHistory } from 'react-router-dom';
 
-const Header = ({ username, isLogged, loginOff }) => {
+const Header = ({ id, logged, inRoom, nickname, session, status, rooms, playingPlayers, waitingPlayers }) => {
+
+    React.useEffect(() => {
+        status();
+    }, [])
 
     const history = useHistory();
 
     const handleSignOutClick = () => {
-        loginOff();
-        history.push("/login");
+        logout(id, session)
+        .then(() => history.push("/"));
+    }
+    
+    const handleLeaveRoomClick = () => {
+        // leaveRoom(id, session)
+        // .then(() => history.push("/"));
+        history.push("/")
     }
 
     return (
         <Container>
             <header className="header_area">
+                <div className="status-wrapper">
+                    <p>Salas activas: {rooms}</p> | <p>Jugadores activos: {playingPlayers}</p> | <p>Jugadores en espera: {waitingPlayers}</p>
+                </div>
                 <div className="main_menu">
                     <nav className="navbar navbar-expand-lg w-100">
                         <div className="container">
-                            <a className={ username ? "navbar-brand-username" : "navbar-brand" } href="/">
+                            <a className="navbar-brand" href="/">
+                            {/* <a className={ id ? "navbar-brand-username" : "navbar-brand" } href="/"> */}
                                 <img src={logo} alt="Sprint Break" />
                             </a>
 
-                            { isLogged && username ? (<div className="username">
-                                <p>Usuario: {username}</p>
-                            </div>) : null }
+                            <div className="nickname">
+                                <p>Usuario: {id}</p>
+                            </div>
 
-                            { isLogged ? (<div className="btn-salir">
-                                <Button onClick={handleSignOutClick}>Abandonar</Button>
-                            </div>) : null }
+                            <div className="btn-salir">
+                                <Button onClick={handleLeaveRoomClick}>Abandonar</Button>
+                                {/* { inRoom && <Button onClick={handleLeaveRoomClick}>Abandonar</Button> } */}
+                                {/* <Button onClick={handleSignOutClick}>Logout</Button> */}
+                            </div>
 
                         </div>
                     </nav>
@@ -43,14 +61,22 @@ const Header = ({ username, isLogged, loginOff }) => {
 
 const mapStateToProps = state => {
     return {
-        username: state.loginReducer.username,
-        isLogged: state.loginReducer.isLogged
+        id: state.appReducer.user_id,
+        inRoom: state.appReducer.inRoom,
+        nickname: state.appReducer.nickname,
+        session: state.appReducer.session,
+        rooms: state.appReducer.rooms,
+        playingPlayers: state.appReducer.playingPlayers,
+        waitingPlayers: state.appReducer.waitingPlayers,
+        logged: state.appReducer.logged
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        loginOff: () => dispatch(loginFailure()),
+        leaveRoom: (id, session) => dispatch(room.actionLeaveRoom(id, session)),
+        logout: (id, session) => dispatch(logout(id, session)),
+        status: () => dispatch(status())
     }
 }
 

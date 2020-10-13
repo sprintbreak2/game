@@ -11,7 +11,7 @@ export const Container = styled.div`
         flex-direction: column;
         align-items: center;
         margin: 0 auto;
-        width: 50%;
+        width: 100%;
 
         h4 {
             color: #262533;
@@ -24,12 +24,21 @@ export const Container = styled.div`
             }
         }
 
+        .github-button {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+        }
+
         div.new-user {
             margin: 0 auto;
         }
 
-        form {
+        .form {
             margin: 2rem;
+            width: 30%;
 
             h4 {
                 color: #262533;
@@ -51,6 +60,19 @@ export const Container = styled.div`
                     margin-top: 1rem;
                 }
 
+            }
+        }
+
+        .notlogged-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 5rem;
+            margin-bottom: 3rem;
+
+            img, h4 {
+                margin: 1rem 0;
             }
         }
     }

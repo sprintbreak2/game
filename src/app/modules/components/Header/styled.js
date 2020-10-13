@@ -10,6 +10,24 @@ export const Container = styled.div`
     left: 0;
     z-index: 99;
 
+    .status-wrapper {
+        background: #262533;
+        color: #FFFFFF;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        top: 0px;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 16px;
+
+        p {
+            margin: 0 1rem;
+            padding: 0;
+        }
+    }
+
     .main_menu {
 
         .container {

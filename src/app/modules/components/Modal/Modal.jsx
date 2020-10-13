@@ -10,10 +10,10 @@ import Button from './../Button/Button';
 import { TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setUsername, loginSuccess } from './../../../modules/store/actions/actions';
+import { room } from './../../store/actions/index';
 
 
-const Modal = ({ active, onCancel, newUsername, loginOn }) => {
+const Modal = ({ active, onCancel, joinRoom, session }) => {
 
     const [value, setValue] = useState(null);
     const history = useHistory();
@@ -23,8 +23,8 @@ const Modal = ({ active, onCancel, newUsername, loginOn }) => {
     }
 
     const handleSuccess = () => {
-        newUsername(value);
-        loginOn();
+        // setNickname(value);
+        joinRoom(session.user_id, session);
         history.push("/room");
     }
 
@@ -45,11 +45,16 @@ const Modal = ({ active, onCancel, newUsername, loginOn }) => {
     )
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
     return {
-        newUsername: username => dispatch(setUsername(username)),
-        loginOn: () => dispatch(loginSuccess()),
+        session: state.appReducer.session
     }
 }
 
-export default connect(null, mapDispatchToProps)(Modal);
+const mapDispatchToProps = dispatch => {
+    return {
+        joinRoom: (id, session) => dispatch(room.actionJoinRoom(id, session)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Modal);

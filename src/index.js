@@ -10,6 +10,8 @@ import { PersistGate } from 'redux-persist/lib/integration/react'
 
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 
+import Loader from 'app/modules/components/Loader/LoaderContainer';
+
 import 'assets/stylesheets/main.scss'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -38,7 +40,7 @@ const BodyComponent = ({ location: { pathname } }) => {
 const Body = withRouter(BodyComponent)
 
 const GlobalStyle = createGlobalStyle`
-    * {
+    *, html, body {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -46,13 +48,21 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    #root {
+        min-height: 100%;
+        box-sizing: border-box;
+    }
+
+    body {
         background-image: radial-gradient(circle at top, #DEDEDE 20%, #FFFFFF 100%);
         color: white;
-        height: 100vh;
         margin: 0;
         padding: 0;
         transition: all 0.3s ease;
-        box-sizing: border-box;
         font-family: 'Barlow Semi Condensed', sans-serif;
     }
 
@@ -66,6 +76,7 @@ ReactDOM.render(
         <PersistGate persistor={persistor}>
             <HashRouter basename="/">
                 <GlobalStyle />
+                <Loader size={50} />
                 <App>
                     <Body key='body' />
                 </App>
