@@ -5,7 +5,7 @@ import Button from './../../../components/Button/Button';
 import { connect } from 'react-redux';
 import Header from './../../../components/Header/Header';
 import imgHome from './../../../../../assets/img/juego_crop.png';
-import { authenticateWs, logout } from './../../../store/actions/loginActions';
+import { logout } from './../../../store/actions/loginActions';
 import { joinRoom } from './../../../store/actions/roomActions';
 import { initializePlayer } from './../../../store/actions/playerActions';
 import { wsDispatch } from './../../../store/actions/wsActions';
@@ -15,7 +15,7 @@ import Websocket from 'react-websocket';
 
 const Home = props => {
 
-    const { id, authenticateWs, dispatchWs, session, initializePlayer, joinRoom, inRoom } = props;
+    const { id, dispatchWs, session, initializePlayer, joinRoom, inRoom } = props;
 
     const history = useHistory();
     const ws = React.createRef();
@@ -74,13 +74,11 @@ const mapStateToProps = state => {
         id: state.appReducer.user_id,
         inRoom: state.appReducer.inRoom,
         session: state.appReducer.session,
-        websocket: state.appReducer.websocket,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        authenticateWs: (ws, session) => dispatch(authenticateWs(ws, session)),
         dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatch(id, data, { props, ws })),
         initializePlayer: (id) => dispatch(initializePlayer(id)),
         joinRoom: (id, session, ws) => dispatch(joinRoom(id, session, ws)),

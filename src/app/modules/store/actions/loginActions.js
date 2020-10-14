@@ -1,17 +1,6 @@
 import config from '../../../config/config';
 import crypto from 'crypto'
 
-export function authenticateWs(ws, session) {
-    return function() {
-        ws.sendMessage(JSON.stringify({
-            type: 'AUTHENTICATE',
-            id: session.user_id,
-            token: session.token,
-            origin: session.origin,
-        }))
-    }
-}
-
 export function setWebsocket(ws) {
     return function (dispatch) {
         dispatch({ type: 'SET_WEBSOCKET', payload: { ws } })

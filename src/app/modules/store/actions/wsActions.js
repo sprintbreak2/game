@@ -7,9 +7,9 @@ export const action = "WS_DISPATCHER"
 
 export function authenticateWs(id, ws, session) {
     console.log('authenticateWs session: ', session);
-    if (!session || !session.id) return function (dispatch) { console.log('Missing session') }
+    if (!session || !session.user_id) return function (dispatch) { console.log('Missing session') }
     return function (dispatch) {
-        const data ={ type: 'AUTHENTICATE', id: session.id }
+        const data ={ type: 'AUTHENTICATE', id: session.user_id }
         console.log("Sending authenticate", data)
         ws.sendMessage(JSON.stringify(data))
     }
