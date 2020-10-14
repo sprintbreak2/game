@@ -15,6 +15,7 @@ export function authenticateWs(id, ws, session) {
 }
 
 export function wsDispatch(id, message, { props, ws }) {
+    console.log(message)
     let json
     try {
         json = JSON.parse(message)

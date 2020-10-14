@@ -18,6 +18,7 @@ const INITIAL_STATE = {
         origin_id: '',
         token: '',
     },
+    messages: [],
     nickname: '',
     playerType: '',
     players: {},
@@ -45,11 +46,18 @@ const INITIAL_STATE = {
     user_id: randomHelper.getRandomId(),
     waitingPlayers: 0,
     whiteCards: [],
-    winner: null
+    winner: null,
+    websocket: null,
 }
 
 export function appReducer(state = INITIAL_STATE, action) {
     switch(action.type) {
+        case 'SET_WEBSOCKET': {
+            return {
+                ...state,
+                websocket: action.payload.ws,
+            }
+        }
         case 'LOGIN_SUCCESS': {
             return {
                 ...state,
@@ -115,7 +123,8 @@ export function appReducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 room: action.payload.response.room_id,
-                statusRoom: action.payload.status
+                statusRoom: action.payload.status,
+                inRoom: true,
             }
         }
         case 'ROOM_CLOSED': {
@@ -123,16 +132,31 @@ export function appReducer(state = INITIAL_STATE, action) {
                 ...state,
                 room: '',
                 statusRoom: 'Closed',
+                inRoom: false,
+                accumulatedPoints: 0,
+                selectedCard: 0,
+                winner: null,
+                roundLimit: "",
+                chooseCardLimit: "",
+                chooseWinnerLimit: ""
             }
         }
         case 'ROOM_LEAVED': {
             return {
                 room: '',
                 statusRoom: 'Leaved',
+                inRoom: false,
+                accumulatedPoints: 0,
+                selectedCard: 0,
+                winner: null,
+                roundLimit: "",
+                chooseCardLimit: "",
+                chooseWinnerLimit: ""
             }
         }
         case 'ROUND_NEW': {
             const { data } = action.payload;
+            console.log('Round new:', data);
             if(data.player_type === "hand") {
                 return {
                     ...state,
@@ -211,12 +235,19 @@ export function appReducer(state = INITIAL_STATE, action) {
         case 'SET_LOGIN_STATE': {
             return {
                 ...state,
+                nickname: action.payload.nickname,
                 login: {
                     code: action.payload.code,
                     origin: action.payload.origin,
                     origin_id: action.payload.origin_id,
                     token: action.payload.token,
                 }
+            }
+        }
+        case 'SEND_MESSAGE': {
+            return {
+                ...state,
+                messages: '',
             }
         }
         case 'ERROR': {

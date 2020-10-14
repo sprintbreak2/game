@@ -7,10 +7,18 @@ export const PageContainer = styled.div`
 
 export const Container = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     margin-top: 1.5rem;
+
+    .play-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
 `;
 
 export const CardsWrapper = styled.div`

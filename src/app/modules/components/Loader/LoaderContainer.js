@@ -1,7 +1,7 @@
 import Loader from './Loader';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
-import { loadingOn, loadingOff } from './../../store/actions/index';
+import { loadingOn, loadingOff } from './../../store/actions/appActions';
 
 const mapStateToProps = (state) => {
     return {

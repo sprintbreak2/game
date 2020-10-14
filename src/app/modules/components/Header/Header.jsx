@@ -3,16 +3,15 @@ import { connect } from 'react-redux';
 import { Container } from './styled';
 import Button from './../Button/Button';
 import logo from './../../../../assets/img/logo.png';
-import { room } from './../../../modules/store/actions/index';
 import { logout } from './../../../modules/store/actions/loginActions';
-import { status } from './../../../modules/store/actions/roomActions';
+import { leaveRoom, status } from './../../../modules/store/actions/roomActions';
 import { useHistory } from 'react-router-dom';
 
 const Header = ({ id, logged, inRoom, nickname, session, status, rooms, playingPlayers, waitingPlayers }) => {
 
     React.useEffect(() => {
         status();
-    }, [])
+    }, [rooms, playingPlayers, waitingPlayers])
 
     const history = useHistory();
 
@@ -74,7 +73,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        leaveRoom: (id, session) => dispatch(room.actionLeaveRoom(id, session)),
+        leaveRoom: (id, session) => dispatch(leaveRoom(id, session)),
         logout: (id, session) => dispatch(logout(id, session)),
         status: () => dispatch(status())
     }

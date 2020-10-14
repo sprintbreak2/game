@@ -7,6 +7,7 @@ export function roomClosed(id, data) {
 }
 
 export function joinRoom(id, session) {
+    console.log("Post /enter-room:", { id })
     return function(dispatch) {
         dispatch({ type: 'LOADING_ON' })
         return fetch(`${config.api.url}/enter-room`, {
@@ -14,11 +15,11 @@ export function joinRoom(id, session) {
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Id': session.user_id,
-                'X-Session-Type': session.origin,
-                'X-Token': session.token
+                'x-id': session.user_id,
+                'x-session-type': session.origin,
+                'x-token': session.token
             },
-            body: JSON.stringify({ id: session.user_id })
+            body: JSON.stringify({ id:session.user_id })
         })
         .then(response => response.json())
         .then(json => {
@@ -39,9 +40,9 @@ export function leaveRoom(id, session) {
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Id': session.id,
-                'X-Session-Type': session.origin,
-                'X-Token': session.token
+                'x-id': session.user_id,
+                'x-session-type': session.origin,
+                'x-token': session.token
             }, body: JSON.stringify({ id: session.user_id })
         })
         .then(response => response.json())
@@ -65,7 +66,6 @@ export function status() {
         })
         .then(response => response.json())
         .then(status => {
-            console.log(status);
             dispatch({
                 type: 'STATUS',
                 payload: {

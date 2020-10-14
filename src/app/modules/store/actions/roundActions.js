@@ -1,6 +1,7 @@
 import config from '../../../config/config'
 
 export function newRound(data, props) {
+    console.log('Action newRound')
     return function (dispatch) {
         dispatch({ type: 'ROUND_NEW', payload: { id: props.id, data } })
     }
@@ -18,6 +19,12 @@ export function winnerSubmitted(data, props) {
     }
 }
 
+export function selectCard(id, card) {
+    return function (dispatch) {
+        dispatch({ type: 'SELECT_CARD', payload: { id, card } });
+    }
+}
+
 export function submitCard(id, session, room_id, card_id) {
     return function (dispatch) {
         return fetch(`${config.api.url}/choose-card`, {
@@ -25,9 +32,9 @@ export function submitCard(id, session, room_id, card_id) {
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Id': session.user_id,
-                'X-Session-Type': session.origin,
-                'X-Token': session.token
+                'x-id': session.user_id,
+                'x-session-type': session.origin,
+                'x-token': session.token
             },
             body: JSON.stringify({ id: session.user_id, room_id, card_id })
         })
@@ -48,9 +55,9 @@ export function submitWinner(id, session, room_id, card_id) {
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Id': session.user_id,
-                'X-Session-Type': session.origin,
-                'X-Token': session.token
+                'x-id': session.user_id,
+                'x-session-type': session.origin,
+                'x-token': session.token
             },
             body: JSON.stringify({ id: session.user_id, room_id, card_id })
         })

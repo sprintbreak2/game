@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import config from '../../../../config/config';
 import { connect } from 'react-redux';
 import Card from './../../../components/Card/Card';
 import Header from './../../../components/Header/Header';
 import Score from './../../../components/Score/Score';
 import Timer from './../../../components/Timer/Timer';
+import Chat from './../../../components/Chat/Chat';
 import { RandomHelper } from './../../../../shared/helpers/RandomHelper';
 import { ActionsWrapper, CardsWrapper, Container, PageContainer } from './styled';
-import { player, room, round, wsDispatcher } from './../../../store/actions/index';
+import { sendMessage } from './../../../store/actions/chatActions';
+import { initializePlayer } from './../../../store/actions/playerActions';
+import { wsDispatch } from './../../../store/actions/wsActions';
+import { selectCard, submitCard, submitWinner } from './../../../store/actions/roundActions';
+import Websocket from 'react-websocket';
 
 const redCard = {
     id: 0, 
@@ -23,44 +29,12 @@ const whiteCards = [
 const randomHelper = new RandomHelper();
 
 const Room = props => {
-
-    const { 
-        initializePlayer,
-        dispatchWs, 
-        selectCard,
-        joinRoom,
-        leaveRoom,
-        submitCard,
-        submitWinner,
-        room
-    } = props;
-
-    const [info, setInfo] = useState({
-        red_card: { content: "" },
-        white_cards: [],
-        points: "",
-        superpoints: "",
-        status: "Initialized",
-        type: "",
-        logged: false,
-        in_room: false,
-        selected_card: 0,
-        winner: null,
-        round_limit: "",
-        choose_card_limit: "",
-        choose_winner_limit: ""
-    });
-
+    
     React.useEffect(() => {
-        console.log(room);
+        console.log(props);
     }, [])
 
-    const [session, setSession] = useState({
-        origin: "",
-        origin_id: "",
-        token: "",
-        username: ""
-    })
+    const chat = React.createRef();
 
     const [selectedCard, setSelectedCard] = useState(null);
     const [houseCard, setHouseCard] = useState(null);
@@ -128,108 +102,151 @@ const Room = props => {
         }
     }
 
+    const handleMessageClick = message => {
+        props.sendMessage(props.id, props.session, message);
+    }
+
+    const wsOpen = () => console.log('WS Open');
+
+    const wsClose = data => console.log('WS Close', data);
+
+    const wsData = data => {
+        console.log('WS Recieved: ', data);
+        props.dispatchWs(props.id, data, { props, ws: props.websocket });
+    }
+
+    const wsDataError = (data) => {
+        console.error("WS Error", data)
+    }
+
     return (
         <PageContainer>
+            <Websocket url={config.api.ws_url}
+                debug={false}
+                reconnect={true}
+                onOpen={wsOpen}
+                onClose={wsClose}
+                onMessage={wsData}
+                onError={wsDataError}
+                ref={props.websocket}
+            />
             <Header />
             <Container>
-                <CardsWrapper>
+                <div class="play-container">                
+                    <CardsWrapper>
 
-                    {/* carta roja */}
-                    { playing ? (
-                        <div className="played-card">
-                            <Card
-                            key={redCard.id} 
-                            id={redCard.id}
-                            color={redCard.color}
-                            text={redCard.text}
+                        {/* carta roja */}
+                        { playing ? (
+                            <div className="played-card">
+                                <Card
+                                // key={redCard.id}
+                                // id={redCard.id}
+                                // color={redCard.color}
+                                color="roja"
+                                text={props.redCard.content}
+                                />
+                                <p className="mensaje">Pregunta</p>
+                            </div>) : (
+                                <Card
+                                // key={redCard.id}
+                                // id={redCard.id}
+                                // color={redCard.color}
+                                color="roja"
+                                text={props.redCard.content}
+                                />
+                            )
+                        }
+                        {/* cartas blancas */}
+
+                        { !playing && typePlayer === 0 && (
+                            <>
+                            <Card />
+                            <Card />
+                            <Card />
+                            </>
+                        ) }
+
+                        { !playing && typePlayer !== 0 && props.whiteCards.map(card => <Card
+                                // key={card.id} 
+                                // id={card.id}
+                                // color={card.color} 
+                                color="blanca" 
+                                text={card.content}
+                                onClick={handleSelectCard}
                             />
-                            <p className="mensaje">Pregunta</p>
-                        </div>) : (
-                            <Card 
-                            key={redCard.id} 
-                            id={redCard.id}
-                            color={redCard.color} 
-                            text={redCard.text}
-                            />)
-                    }
-                    {/* cartas blancas */}
+                        ) }
 
-                    { !playing && typePlayer === 0 && (
-                        <>
-                        <Card />
-                        <Card />
-                        <Card />
-                        </>
-                    ) }
-
-                    { !playing && typePlayer !== 0 && whiteCards.map(card => <Card
-                            key={card.id} 
-                            id={card.id}
-                            color={card.color} 
-                            text={card.text}
-                            onClick={handleSelectCard}
-                        />
-                    ) }
-
-                    { playing && selectedCard ? 
-                    (<div className="playing-cards">
-                        <div className="played-card">
-                            <Card
-                            key={whiteCards[selectedCard-1].id} 
-                            id={whiteCards[selectedCard-1].id}
-                            color={whiteCards[selectedCard-1].color} 
-                            text={whiteCards[selectedCard-1].text}
-                            />
-                            <p className="mensaje">Vos elegiste</p>
+                        { playing && selectedCard ? 
+                        (<div className="playing-cards">
+                            <div className="played-card">
+                                <Card
+                                key={whiteCards[selectedCard-1].id} 
+                                id={whiteCards[selectedCard-1].id}
+                                color={whiteCards[selectedCard-1].color} 
+                                text={whiteCards[selectedCard-1].text}
+                                />
+                                <p className="mensaje">Vos elegiste</p>
+                            </div>
+                            <div className="played-card">
+                                {houseCard ? (<Card 
+                                key={whiteCards[houseCard-1].id} 
+                                id={whiteCards[houseCard-1].id}
+                                color={whiteCards[houseCard-1].color} 
+                                text={whiteCards[houseCard-1].text}
+                                selected={true}
+                                win={win}
+                                />) : <Card />}
+                                <p className="mensaje">La casa elige</p>
+                            </div>
                         </div>
-                        <div className="played-card">
-                            {houseCard ? (<Card 
-                            key={whiteCards[houseCard-1].id} 
-                            id={whiteCards[houseCard-1].id}
-                            color={whiteCards[houseCard-1].color} 
-                            text={whiteCards[houseCard-1].text}
-                            selected={true}
-                            win={win}
-                            />) : <Card />}
-                            <p className="mensaje">La casa elige</p>
-                        </div>
-                    </div>
-                    ) : null }
-                    
-                </CardsWrapper>
-                <ActionsWrapper>
-                    { timer && <Timer onComplete={handlePlayCard} /> }
-                    <Score score={score} />
-                    {/* <Button onClick={handlePlayCard}>Jugar carta</Button> */}
-                </ActionsWrapper>
+                        ) : null }
+                        
+                    </CardsWrapper>
+                    <ActionsWrapper>
+                        { timer && <Timer onComplete={handlePlayCard} /> }
+                        <Score score={score} />
+                        {/* <Button onClick={handlePlayCard}>Jugar carta</Button> */}
+                    </ActionsWrapper>
+                </div>
+                <Chat sendMessage={handleMessageClick} username={props.id} messages={props.messages} ref={chat} />
             </Container>
         </PageContainer>
     )
 }
 
-const mapStateToProps = (state, self) => {
-    // console.log("This id:" + self.id)
-    // console.log("Props:",state.players[self.id])
-    // const props = {}
-    // if (state.players[self.id]) {
-    //     props.info = Object.assign({}, state.players[self.id])
-    // }
-    // return props
+const mapStateToProps = (state) => {
     return {
+        accumulatedPoints: state.appReducer.accumulatedPoints,
+        chooseCardLimit: state.appReducer.chooseCardLimit,
+        chooseWinnerLimit: state.appReducer.chooseWinnerLimit,
+        dateLimit: state.appReducer.dateLimit,
+        error: state.appReducer.error,
+        id: state.appReducer.id,
+        messages: state.appReducer.messages,
+        nickname: state.appReducer.nickname,
+        playerType: state.appReducer.playerType,
+        points: state.appReducer.points,
+        redCard: state.appReducer.redCard,
         room: state.appReducer.room,
+        roundLimit: state.appReducer.roundLimit,
+        selectedCard: state.appReducer.selectCard,
+        session: state.appReducer.session,
+        submitted: state.appReducer.submitted,
+        superpoints: state.appReducer.superpoints,
+        websocket: state.appReducer.websocket,
+        whiteCards: state.appReducer.whiteCards,
+        winner: state.appReducer.winner,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        authenticateWs: (id, ws, session) => dispatch(wsDispatcher.actionAuthenticateWs(id, ws, session)),
-        initializePlayer: (id) => dispatch(player.actionInitializePlayer(id)),
-        dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatcher.actionDispatch(id, data, { props, ws })),
-        selectCard: (id, card) => dispatch(round.actionSelectCard(id, card)),
-        joinRoom: (id, session) => dispatch(room.actionJoinRoom(id, session)),
-        leaveRoom: (id, session) => dispatch(room.actionLeaveRoom(id, session)),
-        submitCard: (id, session, room, card) => dispatch(round.actionSubmitCard(id, session, room, card)),
-        submitWinner: (id, session, room, card) => dispatch(round.actionSubmitWinner(id, session, room, card))
+        dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatch(id, data, { props, ws })),
+        initializePlayer: (id) => dispatch(initializePlayer(id)),
+        selectCard: (id, card) => dispatch(selectCard(id, card)),
+        sendMessage: (id, session, message) => dispatch(sendMessage(id, session, message)),
+        submitCard: (id, session, room, card) => dispatch(submitCard(id, session, room, card)),
+        submitWinner: (id, session, room, card) => dispatch(submitWinner(id, session, room, card))
     }
 }
 

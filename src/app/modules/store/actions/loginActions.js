@@ -12,6 +12,12 @@ export function authenticateWs(ws, session) {
     }
 }
 
+export function setWebsocket(ws) {
+    return function (dispatch) {
+        dispatch({ type: 'SET_WEBSOCKET', payload: { ws } })
+    }
+}
+
 export function register(id, { data }) {
     const postData = {
         username: data.username,
@@ -41,6 +47,7 @@ export function register(id, { data }) {
 }
 
 export function login(id, { origin, data }, ws) {
+    console.log("Post /login:", { data })
     if(origin === 'santander') {
         return function(dispatch) {
             dispatch({ type: 'LOADING_ON' });
@@ -77,6 +84,7 @@ export function login(id, { origin, data }, ws) {
                     })
                     .then(response => response.json())
                     .then(json => {
+                        console.log("Received:", json)
 
                         const session = {
                             user_id: json.id,
@@ -122,7 +130,6 @@ export function login(id, { origin, data }, ws) {
     }
 
     return function(dispatch) {
-        dispatch({ type: 'LOADING_ON' });
         return fetch(`${config.api.url}/login`, {
             method: 'post', 
             mode: 'cors', 
@@ -131,7 +138,12 @@ export function login(id, { origin, data }, ws) {
                 'X-Session-Type': origin
             }, 
             body: JSON.stringify(data)
-        }).then(response => response.json()).then(json => {
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log("Received:", json)
+            dispatch({ type: 'LOADING_ON' });
+
             // Autentico el token después de login
             const session = {
                 user_id: json.id,

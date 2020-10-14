@@ -6,17 +6,16 @@ import { GoogleLoginButton, GithubLoginButton } from 'react-social-login-buttons
 import { GoogleLogin } from 'react-google-login';
 import { Container, LoginsContainer } from './styled';
 import { TextField } from '@material-ui/core';
-import { wsDispatcher } from '../../../store/actions/index';
-import { login, logout, register, authenticateWs, setLoginState } from './../../../store/actions/loginActions';
+import { wsDispatch } from '../../../store/actions/wsActions';
+import { login, logout, register, authenticateWs, setLoginState, setWebsocket } from './../../../store/actions/loginActions';
 import GitHubLogin from 'react-github-login';
 import Button from './../../../components/Button/Button';
 import logo from './../../../../../assets/img/logo.png';
 import config from '../../../../config/config';
 
-
 const Login = props => {
 
-  const { id, loginAction, registerLogin, dispatchWs, setLoginState, logged } = props;
+  const { id, loginAction, registerLogin, dispatchWs, setLoginState, logged, setWebsocketState } = props;
 
   const history = useHistory();
   const ws = React.createRef();
@@ -31,10 +30,17 @@ const Login = props => {
   const [loginRegister, setLoginRegister] = useState(false);
 
   React.useEffect(() => {
-    if(logged) history.push("/home");
+    if(logged) {
+      setWebsocketState(ws.current);
+      history.push("/home");
+    }
   }, [logged]);
 
   const handleLoginWithUser = () => {
+    setLoginState({
+      origin: "santander",
+      nickname: user
+    })
     loginAction(id, {
       origin: 'santander',
       data: { 
@@ -55,7 +61,6 @@ const Login = props => {
   }
 
   const handleGoogleLoginSuccess = response => {
-    console.log(response)
     setLoginState({
       origin: "google",
       origin_id: response.googleId,
@@ -191,8 +196,9 @@ const mapDispatchToProps = dispatch => {
     loginAction: (id, data, ws) => dispatch(login(id, data, ws)),
     logoutAction: (id, session) => dispatch(logout(id, session)),
     registerLogin: (id, data) => dispatch(register(id, data)),
-    dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatcher.actionDispatch(id, data, { props, ws })),
-    setLoginState: (data) => dispatch(setLoginState(data))
+    dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatch(id, data, { props, ws })),
+    setLoginState: (data) => dispatch(setLoginState(data)),
+    setWebsocketState: ws => dispatch(setWebsocket(ws))
   }
 }
 
