@@ -6,6 +6,7 @@ import { newRound, cardSubmitted, winnerSubmitted } from './roundActions'
 export const action = "WS_DISPATCHER"
 
 export function authenticateWs(id, ws, session) {
+    console.log('authenticateWs session: ', session);
     if (!session || !session.id) return function (dispatch) { console.log('Missing session') }
     return function (dispatch) {
         const data ={ type: 'AUTHENTICATE', id: session.id }
@@ -15,7 +16,7 @@ export function authenticateWs(id, ws, session) {
 }
 
 export function wsDispatch(id, message, { props, ws }) {
-    console.log(message)
+    console.log('wsDispatch props: ', props);
     let json
     try {
         json = JSON.parse(message)

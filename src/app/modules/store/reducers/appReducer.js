@@ -1,3 +1,4 @@
+import session from 'redux-persist/lib/storage/session';
 import { RandomHelper } from './../../../shared/helpers/RandomHelper';
 
 const randomHelper = new RandomHelper();
@@ -12,12 +13,6 @@ const INITIAL_STATE = {
     inRoom: false,
     loading: false,
     logged: false,
-    login: {
-        code: '',
-        origin: '',
-        origin_id: '',
-        token: '',
-    },
     messages: [],
     nickname: '',
     playerType: '',
@@ -35,6 +30,9 @@ const INITIAL_STATE = {
         user_id: '',
         token: '',
         expires: '',
+        code: '',
+        origin: '',
+        origin_id: '',
     },
     statusPlayer: 'Initialized',
     statusLogin: '',
@@ -65,9 +63,23 @@ export function appReducer(state = INITIAL_STATE, action) {
                 logged: action.payload.logged,
                 user_id: action.payload.response.id,
                 session: {
+                    ...state.session,
                     user_id: action.payload.response.id,
                     token: action.payload.response.token,
                     expires: action.payload.response.expires
+                }
+            }
+        }
+        case 'SET_SESSION_STATE': {
+            return {
+                ...state,
+                nickname: action.payload.data.nickname,
+                session: {
+                    ...state.session,
+                    code: action.payload.data.code,
+                    origin: action.payload.data.origin,
+                    origin_id: action.payload.data.origin_id,
+                    token: action.payload.data.token,
                 }
             }
         }
@@ -230,18 +242,6 @@ export function appReducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 nickname: action.payload.nickname,
-            }
-        }
-        case 'SET_LOGIN_STATE': {
-            return {
-                ...state,
-                nickname: action.payload.nickname,
-                login: {
-                    code: action.payload.code,
-                    origin: action.payload.origin,
-                    origin_id: action.payload.origin_id,
-                    token: action.payload.token,
-                }
             }
         }
         case 'SEND_MESSAGE': {

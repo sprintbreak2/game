@@ -1,4 +1,8 @@
 import React from "react";
+import { Widget } from 'react-chat-widget';
+import { ChatContainer } from './styled';
+
+import 'react-chat-widget/lib/styles.css';
 
 export default class Chat extends React.Component {
     constructor() {
@@ -57,22 +61,10 @@ export default class Chat extends React.Component {
         const content = msgs.join('\n')
         //console.log("Selected Item:",selectedItem)
         return (
-            <div style={{ "height": "100%" }}>
-                <div style={{
-                    "display": "grid",
-                    "gridTemplateColumns": "auto auto",
-                    "gridColumnEnd": 2,
-                    "padding": "1px"
-                }}>
-                    <textarea style={{
-                        "gridColumn": "1 / 3",
-                        "gridRow": 1,
-                        "padding": "1px"
-                    }}
-                    rows="5"
-                    value={content}
-                    disabled
-                    ref={this.textArea} />
+            <ChatContainer>
+                <Widget title="SprintBreak Chat" subtitle={false} />
+                {/* <div>
+                    <textarea value={content} disabled ref={this.textArea} />
                     <input style={{
                         "gridColumn": 1,
                         "gridRow": 2,
@@ -83,8 +75,8 @@ export default class Chat extends React.Component {
                         "gridRow": 2,
                         "padding": "1px"
                     }} text="" onClick={this.onMessageSend.bind(this)}>Send</button>
-                </div>
-            </div>
+                </div> */}
+            </ChatContainer>
         );
     }
 };

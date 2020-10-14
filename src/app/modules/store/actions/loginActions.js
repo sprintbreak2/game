@@ -46,7 +46,7 @@ export function register(id, { data }) {
     }
 }
 
-export function login(id, { origin, data }, ws) {
+export function login(id, { origin, data }) {
     console.log("Post /login:", { data })
     if(origin === 'santander') {
         return function(dispatch) {
@@ -92,12 +92,12 @@ export function login(id, { origin, data }, ws) {
                             expires: json.expires
                         }
 
-                        ws.sendMessage(JSON.stringify({
-                            type: 'AUTHENTICATE',
-                            id: session.user_id,
-                            token: session.token,
-                            origin: session.origin
-                        }))
+                        // ws.sendMessage(JSON.stringify({
+                        //     type: 'AUTHENTICATE',
+                        //     id: session.user_id,
+                        //     token: session.token,
+                        //     origin: session.origin
+                        // }))
 
                         dispatch({
                             type: 'LOGIN_SUCCESS',
@@ -150,12 +150,12 @@ export function login(id, { origin, data }, ws) {
                 token: json.token,
                 expires: json.expires
             }
-            ws.sendMessage(JSON.stringify({
-                type: 'AUTHENTICATE',
-                id: session.user_id,
-                token: session.token,
-                origin: session.origin
-            }))
+            // ws.sendMessage(JSON.stringify({
+            //     type: 'AUTHENTICATE',
+            //     id: session.user_id,
+            //     token: session.token,
+            //     origin: session.origin
+            // }))
 
             dispatch({
                 type: 'LOGIN_SUCCESS',
@@ -203,8 +203,8 @@ export function logout(id, session) {
     }
 }
 
-export function setLoginState(data) {
+export function setSessionState(data) {
     return function(dispatch) {
-        dispatch({ type: 'SET_LOGIN_STATE', payload: { data } })
+        dispatch({ type: 'SET_SESSION_STATE', payload: { data } })
     }
 }

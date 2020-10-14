@@ -10,9 +10,7 @@ import { RandomHelper } from './../../../../shared/helpers/RandomHelper';
 import { ActionsWrapper, CardsWrapper, Container, PageContainer } from './styled';
 import { sendMessage } from './../../../store/actions/chatActions';
 import { initializePlayer } from './../../../store/actions/playerActions';
-import { wsDispatch } from './../../../store/actions/wsActions';
 import { selectCard, submitCard, submitWinner } from './../../../store/actions/roundActions';
-import Websocket from 'react-websocket';
 
 const redCard = {
     id: 0, 
@@ -106,30 +104,8 @@ const Room = props => {
         props.sendMessage(props.id, props.session, message);
     }
 
-    const wsOpen = () => console.log('WS Open');
-
-    const wsClose = data => console.log('WS Close', data);
-
-    const wsData = data => {
-        console.log('WS Recieved: ', data);
-        props.dispatchWs(props.id, data, { props, ws: props.websocket });
-    }
-
-    const wsDataError = (data) => {
-        console.error("WS Error", data)
-    }
-
     return (
         <PageContainer>
-            <Websocket url={config.api.ws_url}
-                debug={false}
-                reconnect={true}
-                onOpen={wsOpen}
-                onClose={wsClose}
-                onMessage={wsData}
-                onError={wsDataError}
-                ref={props.websocket}
-            />
             <Header />
             <Container>
                 <div class="play-container">                
@@ -233,7 +209,6 @@ const mapStateToProps = (state) => {
         session: state.appReducer.session,
         submitted: state.appReducer.submitted,
         superpoints: state.appReducer.superpoints,
-        websocket: state.appReducer.websocket,
         whiteCards: state.appReducer.whiteCards,
         winner: state.appReducer.winner,
     }
@@ -241,7 +216,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatch(id, data, { props, ws })),
         initializePlayer: (id) => dispatch(initializePlayer(id)),
         selectCard: (id, card) => dispatch(selectCard(id, card)),
         sendMessage: (id, session, message) => dispatch(sendMessage(id, session, message)),

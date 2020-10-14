@@ -6,10 +6,20 @@ export function roomClosed(id, data) {
     }
 }
 
-export function joinRoom(id, session) {
-    console.log("Post /enter-room:", { id })
+export function joinRoom(id, session, ws) {
+
+    console.log("Post /enter-room:", { id, session })
     return function(dispatch) {
+        
         dispatch({ type: 'LOADING_ON' })
+
+        ws.sendMessage(JSON.stringify({
+            type: 'AUTHENTICATE',
+            id: session.user_id,
+            token: session.token,
+            origin: session.origin
+        }))
+        
         return fetch(`${config.api.url}/enter-room`, {
             method: 'post',
             mode: 'cors',

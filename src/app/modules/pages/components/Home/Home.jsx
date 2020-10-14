@@ -5,8 +5,8 @@ import Button from './../../../components/Button/Button';
 import { connect } from 'react-redux';
 import Header from './../../../components/Header/Header';
 import imgHome from './../../../../../assets/img/juego_crop.png';
-import { logout } from './../../../store/actions/loginActions';
-import { joinRoom, status } from './../../../store/actions/roomActions';
+import { authenticateWs, logout } from './../../../store/actions/loginActions';
+import { joinRoom } from './../../../store/actions/roomActions';
 import { initializePlayer } from './../../../store/actions/playerActions';
 import { wsDispatch } from './../../../store/actions/wsActions';
 import { useHistory } from 'react-router-dom';
@@ -15,18 +15,21 @@ import Websocket from 'react-websocket';
 
 const Home = props => {
 
-    const { id, dispatchWs, session, initializePlayer, joinRoom, status, websocket } = props;
+    const { id, authenticateWs, dispatchWs, session, initializePlayer, joinRoom, inRoom } = props;
 
     const history = useHistory();
+    const ws = React.createRef();
 
     useEffect(() => {
         initializePlayer(id);
     }, [])
 
+    useEffect(() => {
+        if(inRoom) history.push("/room");
+    }, [inRoom])
+
     const handleJoinRoom = () => {
-        joinRoom(id, session)
-        .then(() => history.push("/room"))
-        .catch(error => console.error(error));
+        joinRoom(id, session, ws.current);
     }
 
     const wsOpen = () => console.log('WS Open');
@@ -35,7 +38,7 @@ const Home = props => {
 
     const wsData = data => {
         console.log('WS Recieved: ', data);
-        dispatchWs(id, data, { props, ws: websocket });
+        dispatchWs(id, data, { props, ws: ws.current });
     }
 
     const wsDataError = (data) => {
@@ -51,7 +54,7 @@ const Home = props => {
                 onClose={wsClose}
                 onMessage={wsData}
                 onError={wsDataError}
-                ref={websocket}
+                ref={ws}
             />
             <Header />
             <PageHome>
@@ -69,6 +72,7 @@ const Home = props => {
 const mapStateToProps = state => {
     return {
         id: state.appReducer.user_id,
+        inRoom: state.appReducer.inRoom,
         session: state.appReducer.session,
         websocket: state.appReducer.websocket,
     }
@@ -76,9 +80,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        authenticateWs: (ws, session) => dispatch(authenticateWs(ws, session)),
         dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatch(id, data, { props, ws })),
         initializePlayer: (id) => dispatch(initializePlayer(id)),
-        joinRoom: (id, session) => dispatch(joinRoom(id, session)),
+        joinRoom: (id, session, ws) => dispatch(joinRoom(id, session, ws)),
         logout: (id, session) => dispatch(logout(id, session)),
     }
 }
