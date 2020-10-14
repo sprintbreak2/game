@@ -108,7 +108,7 @@ const Room = props => {
         <PageContainer>
             <Header />
             <Container>
-                <div class="play-container">                
+                <div className="play-container">                
                     <CardsWrapper>
 
                         {/* carta roja */}
