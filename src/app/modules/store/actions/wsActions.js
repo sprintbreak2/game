@@ -6,17 +6,21 @@ import { newRound, cardSubmitted, winnerSubmitted } from './roundActions'
 export const action = "WS_DISPATCHER"
 
 export function authenticateWs(id, ws, session) {
-    console.log('authenticateWs session: ', session);
     if (!session || !session.user_id) return function (dispatch) { console.log('Missing session') }
     return function (dispatch) {
-        const data ={ type: 'AUTHENTICATE', id: session.user_id }
+        const data = {
+            type: 'AUTHENTICATE',
+            id: session.user_id,
+            token: session.token,
+            origin: session.origin
+        }
         console.log("Sending authenticate", data)
         ws.sendMessage(JSON.stringify(data))
     }
 }
 
+
 export function wsDispatch(id, message, { props, ws }) {
-    console.log('wsDispatch props: ', props);
     let json
     try {
         json = JSON.parse(message)

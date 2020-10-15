@@ -5,13 +5,12 @@ import Button from './../../../components/Button/Button';
 import { connect } from 'react-redux';
 import Header from './../../../components/Header/Header';
 import imgHome from './../../../../../assets/img/juego_crop.png';
-import { logout } from './../../../store/actions/loginActions';
+import { authenticateWs, logout } from './../../../store/actions/loginActions';
 import { joinRoom } from './../../../store/actions/roomActions';
 import { initializePlayer } from './../../../store/actions/playerActions';
 import { wsDispatch } from './../../../store/actions/wsActions';
 import { useHistory } from 'react-router-dom';
 import Websocket from 'react-websocket';
-
 
 const Home = props => {
 
@@ -25,14 +24,14 @@ const Home = props => {
     }, [])
 
     useEffect(() => {
-        if(inRoom) history.push("/room");
+        if(inRoom) history.push("/room", ws.current);
     }, [inRoom])
 
     const handleJoinRoom = () => {
         joinRoom(id, session, ws.current);
     }
 
-    const wsOpen = () => console.log('WS Open');
+    const wsOpen = () => authenticateWs(ws.current, session);
 
     const wsClose = data => console.log('WS Close', data);
 
@@ -79,6 +78,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        authenticateWs: (ws, session) => dispatch(authenticateWs(ws, session)),
         dispatchWs: (id, data, { props, ws }) => dispatch(wsDispatch(id, data, { props, ws })),
         initializePlayer: (id) => dispatch(initializePlayer(id)),
         joinRoom: (id, session, ws) => dispatch(joinRoom(id, session, ws)),

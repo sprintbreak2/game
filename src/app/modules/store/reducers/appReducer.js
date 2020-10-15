@@ -10,6 +10,7 @@ const INITIAL_STATE = {
     dateLimit: '',
     error: '',
     id: '',
+    inRound: false,
     inRoom: false,
     loading: false,
     logged: false,
@@ -163,7 +164,8 @@ export function appReducer(state = INITIAL_STATE, action) {
                 winner: null,
                 roundLimit: "",
                 chooseCardLimit: "",
-                chooseWinnerLimit: ""
+                chooseWinnerLimit: "",
+                inRound: false,
             }
         }
         case 'ROUND_NEW': {
@@ -183,9 +185,10 @@ export function appReducer(state = INITIAL_STATE, action) {
                     roundLimit: data.round_limit,
                     chooseCardLimit: data.choose_card_limit,
                     chooseWinnerLimit: data.choose_winner_limit,
-                    accumulatedPoints: data.accumulated_points
+                    accumulatedPoints: data.accumulated_points,
+                    inRound: true,
                 }
-            } else if (json.player_type === 'player') {
+            } else if (data.player_type === 'player') {
                 return {
                     ...state,
                     redCard: data.red_card,
@@ -199,7 +202,8 @@ export function appReducer(state = INITIAL_STATE, action) {
                     roundLimit: data.round_limit,
                     chooseCardLimit: data.choose_card_limit,
                     chooseWinnerLimit: data.choose_winner_limit,
-                    accumulatedPoints: data.accumulated_points
+                    accumulatedPoints: data.accumulated_points,
+                    inRound: true,
                 }
             } else {
                 return {
@@ -216,6 +220,7 @@ export function appReducer(state = INITIAL_STATE, action) {
         case 'CARD_SUBMITTED': {
             return {
                 ...state,
+                whiteCards: state.whiteCards.concat(action.payload.card) 
             }
         }
         case 'LOADING_ON': {

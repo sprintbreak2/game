@@ -4,7 +4,7 @@ import { TimerWrapper, TimeWrapper } from './styled';
 
 const INITIAL_TIME = 10;
 
-const Counter = ({ remainingTime, onComplete }) => {
+const Counter = ({ remainingTime = INITIAL_TIME, onComplete }) => {
 
     const currentTime = useRef(remainingTime);
     const prevTime = useRef(null);
@@ -43,7 +43,7 @@ const Counter = ({ remainingTime, onComplete }) => {
     );
 }
 
-const Timer = ({ onComplete }) => {
+const Timer = ({ time, onComplete }) => {
     // const [counter, setCounter] = useState(INITIAL_TIME);
 
     // useEffect(() => {
@@ -56,8 +56,8 @@ const Timer = ({ onComplete }) => {
         <TimerWrapper>
             <CountdownCircleTimer
             isPlaying
-            duration={INITIAL_TIME}
-            initialRemainingTime={INITIAL_TIME}
+            duration={time}
+            initialRemainingTime={time}
             colors="#EC0000"
             size={100}
             strokeWidth={5}>
