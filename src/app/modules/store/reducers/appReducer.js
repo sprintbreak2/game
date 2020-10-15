@@ -27,6 +27,8 @@ const INITIAL_STATE = {
     rooms: 0,
     roundLimit: '',
     selectedCard: 0,
+    selectedCards: [],
+    selectedWinnerCard: 0,
     session: {
         user_id: '',
         token: '',
@@ -51,46 +53,20 @@ const INITIAL_STATE = {
 
 export function appReducer(state = INITIAL_STATE, action) {
     switch(action.type) {
-        case 'SET_WEBSOCKET': {
+        case 'CARD_SUBMITTED': {
             return {
                 ...state,
-                websocket: action.payload.ws,
+                selectedCards: [
+                    ...state.selectedCards,
+                    { ...action.payload.card }
+                ],
             }
         }
-        case 'LOGIN_SUCCESS': {
+        case 'ERROR': {
+            const { error } = action.payload;
             return {
                 ...state,
-                statusLogin: action.payload.status,
-                logged: action.payload.logged,
-                user_id: action.payload.response.id,
-                session: {
-                    ...state.session,
-                    user_id: action.payload.response.id,
-                    token: action.payload.response.token,
-                    expires: action.payload.response.expires
-                }
-            }
-        }
-        case 'SET_SESSION_STATE': {
-            return {
-                ...state,
-                nickname: action.payload.data.nickname,
-                session: {
-                    ...state.session,
-                    code: action.payload.data.code,
-                    origin: action.payload.data.origin,
-                    origin_id: action.payload.data.origin_id,
-                    token: action.payload.data.token,
-                }
-            }
-        }
-        case 'LOGOUT': {
-            return {
-                ...state,
-                statusLogin: 'Logged out',
-                logged: false,
-                user_id: '',
-                session: {}
+                error
             }
         }
         case 'INITIALIZE_PLAYER': {
@@ -113,23 +89,48 @@ export function appReducer(state = INITIAL_STATE, action) {
                 chooseWinnerLimit: ''
             }
         }
-        case 'UPDATE_STATS': {
+        case 'LOADING_ON': {
             return {
                 ...state,
-                points: action.payload.points,
-                superpoints: action.payload.data.superpoints
+                loading: true
             }
         }
-        case 'UPDATE_PROFILE': {
-            return {
-               ...state 
-            }
-        }
-        case 'SET_NICKNAME': {
-            const { nickname } = action.payload;
+        case 'LOADING_OFF': {
             return {
                 ...state,
-                nickname,
+                loading: false
+            }
+        }
+        case 'LOGIN_SUCCESS': {
+            return {
+                ...state,
+                statusLogin: action.payload.status,
+                logged: action.payload.logged,
+                user_id: action.payload.response.id,
+                session: {
+                    ...state.session,
+                    user_id: action.payload.response.id,
+                    token: action.payload.response.token,
+                    expires: action.payload.response.expires
+                }
+            }
+        }
+        case 'LOGOUT': {
+            return {
+                ...state,
+                statusLogin: 'Logged out',
+                logged: false,
+                user_id: '',
+                session: {}
+            }
+        }
+        case 'NEW_MESSAGE': {
+            return {
+                ...state,
+                messages: [
+                    ...state.messages,
+                    { ...action.payload.data }
+                ],
             }
         }
         case 'ROOM_JOINED': {
@@ -211,28 +212,57 @@ export function appReducer(state = INITIAL_STATE, action) {
                 }
             }
         }
+        case 'SET_SESSION_STATE': {
+            return {
+                ...state,
+                nickname: action.payload.data.nickname,
+                session: {
+                    ...state.session,
+                    code: action.payload.data.code,
+                    origin: action.payload.data.origin,
+                    origin_id: action.payload.data.origin_id,
+                    token: action.payload.data.token,
+                }
+            }
+        }
+        case 'SET_WEBSOCKET': {
+            return {
+                ...state,
+                websocket: action.payload.ws,
+            }
+        }
+        
+        
+        case 'SET_NICKNAME': {
+            const { nickname } = action.payload;
+            return {
+                ...state,
+                nickname,
+            }
+        }
         case 'SELECT_CARD': {
             return {
                 ...state,
                 selectedCard: action.payload.card,
             }
         }
-        case 'CARD_SUBMITTED': {
+        
+        case 'SET_NICKNAME': {
             return {
                 ...state,
-                whiteCards: state.whiteCards.concat(action.payload.card) 
+                nickname: action.payload.nickname,
             }
         }
-        case 'LOADING_ON': {
+        case 'SEND_MESSAGE': {
             return {
                 ...state,
-                loading: true
-            }
-        }
-        case 'LOADING_OFF': {
-            return {
-                ...state,
-                loading: false
+                messages: [
+                    ...state.messages,
+                    { 
+                        message: action.payload.message,
+                        username: action.payload.username,
+                    }
+                ],
             }
         }
         case 'STATUS': {
@@ -243,23 +273,38 @@ export function appReducer(state = INITIAL_STATE, action) {
                 waitingPlayers: action.payload.waitingPlayers
             }
         }
-        case 'SET_NICKNAME': {
+        case 'SUBMIT_CARD': {
             return {
                 ...state,
-                nickname: action.payload.nickname,
+                submitted: true,
             }
         }
-        case 'SEND_MESSAGE': {
+        case 'SUBMIT_WINNER': {
             return {
                 ...state,
-                messages: '',
+                submitted: true,
             }
         }
-        case 'ERROR': {
-            const { error } = action.payload;
+        case 'UPDATE_PROFILE': {
+            return {
+               ...state 
+            }
+        }
+        case 'UPDATE_STATS': {
             return {
                 ...state,
-                error
+                points: action.payload.points,
+                superpoints: action.payload.data.superpoints
+            }
+        }
+        case 'WINNER_SUBMITTED': {
+            return {
+                ...state,
+                submitted: true,
+                winner: {
+                    card: action.payload.data.card,
+                    player: action.payload.data.winner,
+                }
             }
         }
         default: {

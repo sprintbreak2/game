@@ -15,7 +15,6 @@ import { initializePlayer } from './../../../store/actions/playerActions';
 import { authenticateWs } from './../../../store/actions/loginActions';
 import { wsDispatch } from './../../../store/actions/wsActions';
 import { selectCard, submitCard, submitWinner } from './../../../store/actions/roundActions';
-import { Portal } from '@material-ui/core';
 
 const dateHelper = new DateHelper();
 const randomHelper = new RandomHelper();
@@ -111,8 +110,9 @@ const Room = props => {
     }
 
     const handleSelectWinner = selectedCard => {
+        const { id, session, room, submitWinner } = props;
         console.log('Carta ganadora: ', selectedCard);
-        props.submitWinner(props.id, props.session, props.room, selectedCard);
+        // submitWinner(id, session, room, selectedCard);
     }
 
     const handleSelectRandomWinner = () => {
@@ -152,6 +152,11 @@ const Room = props => {
             />
             <Header />
             <Container>
+                
+                { !props.inRound && (
+                    <h4>Esperando a los demás jugadores...</h4>
+                ) }
+
                 { props.inRound && (<div className="play-container">                
                     <CardsWrapper>
 
@@ -164,8 +169,8 @@ const Room = props => {
                             />
                         )}
 
-                        { props.playerType === 'Hand' && (props.whiteCards.length > 0 ? (
-                            props.whiteCards.map(card => <Card
+                        { props.playerType === 'Hand' && (props.selectedCards.length > 0 ? (
+                            props.selectedCards.map(card => <Card
                                 key={card.id}
                                 id={card.id}
                                 color="blanca"
@@ -173,7 +178,11 @@ const Room = props => {
                                 onClick={handleSelectWinner}
                             />)
                         ) : (
-                            props.players.map(player => <Card />)
+                            <>
+                            <Card />
+                            <Card />
+                            <Card />
+                            </>
                         ))}
 
                         { props.playerType === 'Player' && (
@@ -283,6 +292,8 @@ const mapStateToProps = (state) => {
         room: state.appReducer.room,
         roundLimit: state.appReducer.roundLimit,
         selectedCard: state.appReducer.selectCard,
+        selectedCards: state.appReducer.selectedCards,
+        selectedWinnerCard: state.appReducer.selectedWinnerCard,
         session: state.appReducer.session,
         submitted: state.appReducer.submitted,
         superpoints: state.appReducer.superpoints,
